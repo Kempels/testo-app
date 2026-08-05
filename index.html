@@ -1,0 +1,747 @@
+<!-- ============================================================
+  NODUS — главная страница («живая мастерская»)
+  URL: /
+  Title:       Nodus — сайты, проекты и цифровые продукты, которые работают
+  Description: Небольшая студия. Делаем сайты, проекты и цифровые продукты, продвигаем их. Все работы на этой странице можно потрогать прямо здесь — это не скриншоты.
+  Вставлять в блок T123 (Другое → HTML-код).
+  Настройки страницы → «Ещё» → убрать верхний и нижний отступы.
+  ЗАМЕНИТЬ ПЕРЕД ПУБЛИКАЦИЕЙ: ничего. Все ссылки настоящие.
+============================================================ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;700;800&family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+.nd *,.nd *::before,.nd *::after{box-sizing:border-box}
+.nd{
+  --bg:#0A0C10; --bg-2:#12151C; --panel:#161A23; --line:#252B37;
+  --fg:#EDEEF2; --fg-2:#9AA3B5; --fg-3:#666E80;
+  --ind:#5B5FEF; --ind-2:#8B8FF5; --ind-3:#B9BBFB; --ind-soft:rgba(91,95,239,.14);
+  --r:20px; --r-s:12px;
+  margin:0;background:var(--bg);color:var(--fg);
+  font-family:'Golos Text',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
+  font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+.nd a{color:inherit;text-decoration:none}
+.nd button,.nd input,.nd select{font:inherit;color:inherit}
+.nd :focus-visible{outline:2.5px solid var(--ind-2);outline-offset:4px;border-radius:6px}
+.nd-w{max-width:1180px;margin:0 auto;padding:0 26px}
+
+/* ---------- экран загрузки ---------- */
+.nd-load{position:fixed;inset:0;z-index:999;background:var(--bg);display:flex;
+  flex-direction:column;align-items:center;justify-content:center;gap:38px;
+  transition:opacity .7s ease,visibility .7s}
+.nd-load.is-done{opacity:0;visibility:hidden}
+.nd-load svg{width:118px;height:118px;overflow:visible}
+.nd-load .ray{stroke:#5B5FEF;stroke-width:6;stroke-linecap:round;fill:none;
+  stroke-dasharray:40;stroke-dashoffset:40;animation:ndDraw .82s cubic-bezier(.65,0,.35,1) forwards}
+.nd-load .ray:nth-of-type(2){animation-delay:.16s}
+.nd-load .ray:nth-of-type(3){animation-delay:.32s}
+.nd-load .dot{fill:#B9BBFB;transform-box:fill-box;transform-origin:center;transform:scale(0);
+  animation:ndPop .5s cubic-bezier(.34,1.56,.64,1) forwards}
+.nd-load .dot:nth-of-type(4){animation-delay:.74s}
+.nd-load .dot:nth-of-type(5){animation-delay:.9s}
+.nd-load .dot:nth-of-type(6){animation-delay:1.06s}
+.nd-load .core{fill:#5B5FEF;transform-box:fill-box;transform-origin:center;transform:scale(0);
+  animation:ndPop .58s cubic-bezier(.34,1.56,.64,1) .5s forwards}
+@keyframes ndDraw{to{stroke-dashoffset:0}}
+@keyframes ndPop{to{transform:scale(1)}}
+.nd-load-b{width:210px;height:2px;background:rgba(255,255,255,.11);border-radius:99px;overflow:hidden}
+.nd-load-b i{display:block;height:100%;width:0;background:linear-gradient(90deg,#5B5FEF,#B9BBFB);
+  border-radius:99px;transition:width .25s linear}
+.nd-load-t{font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--fg-3);margin-top:-24px}
+.nd-load-t b{color:var(--ind-2);font-weight:400}
+@media (prefers-reduced-motion:reduce){
+  .nd-load svg *{animation:none!important;stroke-dashoffset:0!important;transform:scale(1)!important}
+}
+
+.nd-mono{font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase}
+
+/* ---------- шапка ---------- */
+.nd-head{position:fixed;top:0;left:0;right:0;z-index:90;transition:.3s}
+.nd-head.is-stuck{background:rgba(10,12,16,.82);backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+.nd-head-in{display:flex;align-items:center;gap:26px;height:70px}
+.nd-brand{display:flex;align-items:center;gap:11px;flex:none}
+.nd-brand svg{width:26px;height:26px}
+.nd-brand span{font-family:'Onest',sans-serif;font-weight:800;font-size:20px;letter-spacing:-.045em}
+.nd-brand span b{color:var(--ind-2)}
+.nd-nav{margin-left:auto;display:flex;gap:6px;align-items:center}
+.nd-nav a{padding:8px 15px;border-radius:99px;font-size:14.5px;color:var(--fg-2);transition:.2s}
+.nd-nav a:hover{color:var(--fg);background:rgba(255,255,255,.06)}
+.nd-tg{border:1px solid var(--line);border-radius:99px;padding:9px 18px!important;
+  color:var(--fg)!important;font-size:14.5px;transition:.2s}
+.nd-tg:hover{background:var(--ind)!important;border-color:var(--ind)}
+@media (max-width:720px){.nd-nav a:not(.nd-tg){display:none}}
+
+/* ---------- герой ---------- */
+.nd-hero{position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:center;overflow:hidden}
+#ndHero{position:absolute;inset:0;width:100%;height:100%;display:block}
+.nd-hero::after{content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(120% 85% at 22% 46%,rgba(10,12,16,.94) 0%,rgba(10,12,16,.72) 38%,rgba(10,12,16,.15) 72%,transparent 100%)}
+.nd-hero-in{position:relative;z-index:3;padding:112px 0 130px}
+.nd-h1{font-family:'Onest',sans-serif;font-weight:800;letter-spacing:-.055em;line-height:.94;
+  font-size:clamp(46px,10.4vw,136px);margin:24px 0 0;max-width:13ch}
+.nd-word{display:inline-block;overflow:hidden;vertical-align:bottom;padding-bottom:.04em}
+.nd-word i{display:inline-block;font-style:normal;transform:translateY(108%);
+  transition:transform 1s cubic-bezier(.19,1,.22,1)}
+.nd-hero.is-lit .nd-word i{transform:none}
+.nd-h1 .ac{color:var(--ind-2)}
+.nd-lede{margin:30px 0 0;max-width:46ch;font-size:clamp(17px,2.2vw,20px);color:var(--fg-2);
+  opacity:0;transform:translateY(16px);transition:.9s cubic-bezier(.19,1,.22,1) .55s}
+.nd-acts{display:flex;gap:11px;flex-wrap:wrap;margin-top:38px;
+  opacity:0;transform:translateY(16px);transition:.9s cubic-bezier(.19,1,.22,1) .7s}
+.nd-hero.is-lit .nd-lede,.nd-hero.is-lit .nd-acts{opacity:1;transform:none}
+.nd-bp{display:inline-flex;align-items:center;gap:10px;background:var(--ind);border-radius:99px;
+  padding:16px 30px;font-size:16px;font-weight:600;transition:.25s;box-shadow:0 12px 40px -14px var(--ind)}
+.nd-bp:hover{background:#6D6FF7;transform:translateY(-2px)}
+.nd-bs{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:99px;
+  padding:16px 30px;font-size:16px;transition:.25s}
+.nd-bs:hover{border-color:var(--ind-2);background:rgba(255,255,255,.04)}
+
+/* бегущая строка внизу героя */
+.nd-marq{position:absolute;bottom:0;left:0;right:0;z-index:4;overflow:hidden;
+  border-top:1px solid var(--line);background:rgba(10,12,16,.62);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:17px 0}
+.nd-marq-in{display:flex;width:max-content;animation:ndMarq 34s linear infinite}
+.nd-marq b{display:flex;align-items:center;gap:26px;padding-right:26px;
+  font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--fg-2);font-weight:400;white-space:nowrap}
+.nd-marq b u{width:5px;height:5px;border-radius:99px;background:var(--ind-2);text-decoration:none;flex:none}
+@keyframes ndMarq{to{transform:translateX(-50%)}}
+@media (max-width:720px){
+  .nd-hero-in{padding:96px 0 120px}
+  .nd-bp,.nd-bs{padding:14px 24px;font-size:15px}
+}
+
+/* ---------- секции ---------- */
+.nd-sec{padding:120px 0}
+.nd-sec-h{max-width:60ch;margin:0 0 60px}
+.nd-h2{font-family:'Onest',sans-serif;font-weight:800;letter-spacing:-.04em;line-height:1.04;
+  font-size:clamp(30px,5vw,58px);margin:18px 0 0}
+.nd-sub{margin:20px 0 0;color:var(--fg-2);font-size:clamp(16px,2vw,18.5px)}
+
+/* ---------- работа ---------- */
+.nd-work{border-top:1px solid var(--line);padding:72px 0}
+.nd-work-top{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:start;margin-bottom:40px}
+.nd-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ind-2);letter-spacing:.14em}
+.nd-work h3{font-family:'Onest',sans-serif;font-weight:800;letter-spacing:-.04em;
+  font-size:clamp(27px,4vw,44px);line-height:1.06;margin:14px 0 0}
+.nd-work-txt p{margin:0 0 15px;color:var(--fg-2);font-size:16.5px}
+.nd-work-txt p:last-child{margin-bottom:0}
+.nd-facts{display:flex;gap:26px;flex-wrap:wrap;margin-top:24px;padding-top:22px;border-top:1px solid var(--line)}
+.nd-facts div em{display:block;font-style:normal;font-family:'JetBrains Mono',monospace;
+  font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-3);margin-bottom:5px}
+.nd-facts div b{font-family:'Onest',sans-serif;font-weight:700;font-size:16px;letter-spacing:-.02em}
+.nd-out{display:inline-flex;align-items:center;gap:9px;margin-top:26px;border:1px solid var(--line);
+  border-radius:99px;padding:12px 22px;font-size:14.5px;transition:.22s}
+.nd-out:hover{background:var(--ind);border-color:var(--ind);transform:translateX(3px)}
+
+/* живая витрина */
+.nd-live{background:var(--bg-2);border:1px solid var(--line);border-radius:var(--r);
+  overflow:hidden;position:relative}
+.nd-live-bar{display:flex;align-items:center;gap:9px;padding:14px 18px;border-bottom:1px solid var(--line);
+  background:rgba(255,255,255,.02)}
+.nd-live-bar i{width:9px;height:9px;border-radius:99px;background:var(--line)}
+.nd-live-bar i:first-child{background:var(--ind)}
+.nd-live-bar span{margin-left:8px;font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--fg-3)}
+.nd-live-body{padding:28px}
+
+/* --- демо 1: калькулятор --- */
+.nd-f{margin-bottom:18px}
+.nd-f label{display:block;font-size:13.5px;color:var(--fg-2);margin-bottom:8px}
+.nd-in{position:relative;display:block}
+.nd-in input,.nd-in select{width:100%;height:52px;padding:0 44px 0 16px;background:var(--panel);
+  border:1.5px solid var(--line);border-radius:var(--r-s);font-size:18px;font-weight:500;
+  font-variant-numeric:tabular-nums;transition:.16s;appearance:none;-webkit-appearance:none}
+.nd-in select{font-size:15px;font-weight:400;cursor:pointer}
+.nd-in input:focus,.nd-in select:focus{border-color:var(--ind);outline:none;
+  box-shadow:0 0 0 4px var(--ind-soft)}
+.nd-in input::-webkit-outer-spin-button,.nd-in input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.nd-in input[type=number]{-moz-appearance:textfield}
+.nd-in em{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-style:normal;
+  pointer-events:none;color:var(--fg-3);font-family:'JetBrains Mono',monospace;font-size:14px}
+.nd-out-num{margin-top:24px;padding-top:22px;border-top:1px solid var(--line)}
+.nd-out-num em{font-style:normal;font-size:13.5px;color:var(--fg-2)}
+.nd-out-num b{display:block;font-family:'JetBrains Mono',monospace;font-weight:700;
+  font-size:clamp(30px,5vw,42px);letter-spacing:-.045em;margin-top:5px}
+.nd-bar{display:flex;height:13px;border-radius:99px;overflow:hidden;gap:2px;margin-top:20px;
+  background:rgba(255,255,255,.05)}
+.nd-bar i{display:block;height:100%;transition:width .45s cubic-bezier(.22,1,.36,1)}
+.nd-leg{display:flex;gap:20px;flex-wrap:wrap;margin-top:13px;font-size:12.5px;color:var(--fg-2)}
+.nd-leg span{display:flex;align-items:center;gap:7px}
+.nd-leg u{width:9px;height:9px;border-radius:3px;text-decoration:none}
+
+/* --- демо 2: градиент --- */
+#ndGrad{width:100%;height:340px;display:block;border-radius:var(--r-s)}
+.nd-grad-ctl{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+.nd-chip{background:var(--panel);border:1.5px solid var(--line);border-radius:99px;
+  padding:9px 17px;font-size:13.5px;cursor:pointer;transition:.18s}
+.nd-chip:hover{border-color:var(--ind-2)}
+.nd-chip.is-on{background:var(--ind);border-color:var(--ind);color:#fff}
+
+/* --- демо 3: сценарий --- */
+.nd-chat{height:340px;overflow-y:auto;padding:4px 2px;display:flex;flex-direction:column;gap:11px}
+.nd-msg{max-width:82%;padding:12px 16px;border-radius:16px;font-size:15px;line-height:1.5;
+  animation:ndIn .32s cubic-bezier(.22,1,.36,1)}
+.nd-msg.bot{background:var(--panel);border:1px solid var(--line);border-bottom-left-radius:5px;align-self:flex-start}
+.nd-msg.me{background:var(--ind);border-bottom-right-radius:5px;align-self:flex-end;color:#fff}
+@keyframes ndIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.nd-typing{display:flex;gap:5px;padding:15px 16px}
+.nd-typing i{width:7px;height:7px;border-radius:99px;background:var(--fg-3);animation:ndDot 1.2s infinite}
+.nd-typing i:nth-child(2){animation-delay:.15s}
+.nd-typing i:nth-child(3){animation-delay:.3s}
+@keyframes ndDot{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-4px)}}
+.nd-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}
+
+/* ---------- студия ---------- */
+.nd-serv{display:grid;grid-template-columns:repeat(auto-fit,minmax(268px,1fr));gap:16px;margin-top:16px}
+.nd-card{background:var(--bg-2);border:1px solid var(--line);border-radius:var(--r);padding:30px;transition:.25s}
+.nd-card:hover{border-color:#333B4C;transform:translateY(-3px)}
+.nd-card em{font-style:normal;font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--ind-2)}
+.nd-card h4{font-family:'Onest',sans-serif;font-weight:700;font-size:21px;letter-spacing:-.03em;margin:13px 0 10px}
+.nd-card p{margin:0;color:var(--fg-2);font-size:15.5px}
+
+/* ---------- контакт ---------- */
+.nd-cta{border-top:1px solid var(--line);padding:120px 0 100px;text-align:center}
+.nd-cta h2{font-family:'Onest',sans-serif;font-weight:800;letter-spacing:-.05em;line-height:1;
+  font-size:clamp(38px,9vw,96px);margin:22px 0 0}
+.nd-cta p{max-width:44ch;margin:26px auto 0;color:var(--fg-2);font-size:18px}
+.nd-cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:40px}
+.nd-bsup{display:inline-flex;align-items:center;gap:11px;border:1px solid var(--line);
+  border-radius:99px;padding:19px 34px;font-size:16.5px;font-weight:500;transition:.25s;color:var(--fg)}
+.nd-bsup:hover{border-color:var(--ind-2);background:rgba(91,95,239,.12);transform:translateY(-2px)}
+.nd-bsup svg{width:19px;height:19px;flex:none}
+.nd-sup-note{display:block;margin-top:18px;color:var(--fg-3);font-size:14px;max-width:46ch;
+  margin-left:auto;margin-right:auto}
+.nd-big{display:inline-flex;align-items:center;gap:13px;background:var(--ind);
+  border-radius:99px;padding:19px 40px;font-size:17.5px;font-weight:600;transition:.25s;
+  box-shadow:0 14px 44px -14px var(--ind)}
+.nd-big:hover{background:#6D6FF7;transform:translateY(-2px);box-shadow:0 20px 54px -14px var(--ind)}
+.nd-alt{display:block;margin-top:22px;color:var(--fg-3);font-size:14.5px}
+.nd-alt a{color:var(--ind-2);border-bottom:1px solid rgba(139,143,245,.35)}
+
+/* ---------- подвал ---------- */
+.nd-foot{border-top:1px solid var(--line);padding:40px 0}
+.nd-foot-in{display:flex;justify-content:space-between;gap:22px;flex-wrap:wrap;align-items:center;
+  color:var(--fg-3);font-size:13.5px}
+.nd-foot-in a:hover{color:var(--fg)}
+
+.nd-rise{opacity:0;transform:translateY(26px);transition:opacity .8s cubic-bezier(.22,1,.36,1),transform .8s cubic-bezier(.22,1,.36,1)}
+.nd-rise.is-in{opacity:1;transform:none}
+
+@media (max-width:900px){
+  .nd-work-top{grid-template-columns:1fr;gap:32px}
+  .nd-sec{padding:80px 0}
+  .nd-work{padding:56px 0}
+  .nd-cta{padding:88px 0 70px}
+  .nd-live-body{padding:20px}
+  .nd-w{padding:0 18px}
+}
+@media (prefers-reduced-motion:reduce){
+  .nd *{animation-duration:.01ms!important;transition-duration:.01ms!important}
+  .nd-rise{opacity:1;transform:none}
+}
+</style>
+
+<div class="nd" id="nd">
+
+<!-- ================= ЗАГРУЗКА ================= -->
+<div class="nd-load" id="ndLoad" role="status" aria-label="Загрузка">
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <line class="ray" x1="50" y1="50" x2="50"   y2="16"/>
+    <line class="ray" x1="50" y1="50" x2="79.4" y2="67"/>
+    <line class="ray" x1="50" y1="50" x2="20.6" y2="67"/>
+    <circle class="dot" cx="50"   cy="16" r="7"/>
+    <circle class="dot" cx="79.4" cy="67" r="7"/>
+    <circle class="dot" cx="20.6" cy="67" r="7"/>
+    <circle class="core" cx="50" cy="50" r="13"/>
+  </svg>
+  <div class="nd-load-b"><i id="ndLoadBar"></i></div>
+  <div class="nd-load-t">Nodus · <b id="ndLoadNum">0</b>%</div>
+</div>
+
+
+<!-- ================= ШАПКА ================= -->
+<header class="nd-head" id="ndHead"><div class="nd-w nd-head-in">
+  <a href="#nd" class="nd-brand">
+    <svg viewBox="0 0 100 100" aria-hidden="true">
+      <line x1="50" y1="50" x2="50" y2="16" stroke="#8B8FF5" stroke-width="6" stroke-linecap="round"/>
+      <line x1="50" y1="50" x2="79.4" y2="67" stroke="#8B8FF5" stroke-width="6" stroke-linecap="round"/>
+      <line x1="50" y1="50" x2="20.6" y2="67" stroke="#8B8FF5" stroke-width="6" stroke-linecap="round"/>
+      <circle cx="50" cy="16" r="7" fill="#B9BBFB"/><circle cx="79.4" cy="67" r="7" fill="#B9BBFB"/>
+      <circle cx="20.6" cy="67" r="7" fill="#B9BBFB"/><circle cx="50" cy="50" r="13" fill="#5B5FEF"/>
+    </svg>
+    <span>nodus<b>.</b></span>
+  </a>
+  <nav class="nd-nav">
+    <a href="#works">Работы</a>
+    <a href="#studio">Студия</a>
+    <a class="nd-tg" href="https://t.me/nodus_digital_studio" target="_blank" rel="noopener">Написать в Telegram</a>
+  </nav>
+</div></header>
+
+<!-- ================= ГЕРОЙ ================= -->
+<section class="nd-hero" id="ndHeroSec">
+  <canvas id="ndHero" aria-hidden="true"></canvas>
+  <div class="nd-w nd-hero-in">
+    <span class="nd-mono" style="color:var(--ind-2)">Цифровая студия</span>
+    <h1 class="nd-h1">
+      <span class="nd-word"><i>Собираем</i></span>
+      <span class="nd-word"><i>вещи,</i></span>
+      <span class="nd-word"><i>которые</i></span>
+      <span class="nd-word"><i class="ac">работают</i></span><span class="nd-word"><i>.</i></span>
+    </h1>
+    <p class="nd-lede">Сайты, проекты, цифровые продукты и продвижение. Ниже — три наши работы. Не скриншоты: всё запущено прямо на этой странице, можно трогать.</p>
+    <div class="nd-acts">
+      <a class="nd-bp" href="#works">Смотреть работы <span>↓</span></a>
+      <a class="nd-bs" href="https://t.me/nodus_digital_studio" target="_blank" rel="noopener">Написать в Telegram</a>
+    </div>
+  </div>
+  <div class="nd-marq"><div class="nd-marq-in" id="ndMarq"></div></div>
+</section>
+
+<!-- ================= РАБОТЫ ================= -->
+<section class="nd-sec" id="works"><div class="nd-w">
+  <div class="nd-sec-h nd-rise">
+    <span class="nd-mono" style="color:var(--ind-2)">Мастерская</span>
+    <h2 class="nd-h2">Портфолио, которое можно потрогать</h2>
+    <p class="nd-sub">Показывать скриншоты — всё равно что описывать словами вкус. Поэтому каждая работа ниже живая: считает, рисует и отвечает прямо здесь, без перехода на другой сайт.</p>
+  </div>
+
+  <!-- ---------- 01 TaxNow ---------- -->
+  <article class="nd-work nd-rise">
+    <div class="nd-work-top">
+      <div>
+        <span class="nd-num">01 / Сайт-сервис</span>
+        <h3>TaxNow — налоги без бухгалтера</h3>
+        <div class="nd-work-txt" style="margin-top:22px">
+          <p>Девять налоговых калькуляторов, статьи и календарь сроков. Всё считается прямо в браузере: данные пользователя никуда не уходят, сервер о суммах не знает.</p>
+          <p>Главная сложность была не в математике, а в структуре. Мы развели каждый калькулятор на свой адрес со своим заголовком — иначе поисковик физически не может показать страницу по запросу «калькулятор НДС».</p>
+        </div>
+        <div class="nd-facts">
+          <div><em>Что делали</em><b>Сайт, SEO, аналитика</b></div>
+          <div><em>Страниц</em><b>16</b></div>
+          <div><em>Платформа</em><b>Tilda + свой код</b></div>
+        </div>
+        <a class="nd-out" href="https://taxnow.ru" target="_blank" rel="noopener">Открыть taxnow.ru <span>→</span></a>
+      </div>
+      <div class="nd-live">
+        <div class="nd-live-bar"><i></i><i></i><i></i><span>Работает прямо здесь</span></div>
+        <div class="nd-live-body">
+          <div class="nd-f">
+            <label for="ndSum">Сумма, ₽</label>
+            <label class="nd-in"><input type="number" id="ndSum" value="100000" inputmode="decimal" step="any" min="0"><em>₽</em></label>
+          </div>
+          <div class="nd-f">
+            <label for="ndRate">Ставка НДС</label>
+            <label class="nd-in"><select id="ndRate">
+              <option value="22">22% — основная с 2026 года</option>
+              <option value="10">10% — продукты, детские товары</option>
+              <option value="7">7% — УСН</option>
+              <option value="5">5% — УСН</option>
+            </select><em>▾</em></label>
+          </div>
+          <div class="nd-out-num">
+            <em>Сумма НДС</em>
+            <b id="ndNds">0</b>
+            <div class="nd-bar" id="ndTape"></div>
+            <div class="nd-leg" id="ndLeg"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ---------- 02 One Gesture ---------- -->
+  <article class="nd-work nd-rise">
+    <div class="nd-work-top">
+      <div>
+        <span class="nd-num">02 / Экспериментальная страница</span>
+        <h3>One Gesture — трибьют Instagram и Threads</h3>
+        <div class="nd-work-txt" style="margin-top:22px">
+          <p>Страница про один жест — прокрутку большим пальцем, которая связала два продукта. Живой градиент, сквозная линия через все экраны, узел в финале.</p>
+          <p>Здесь мы разбирались, как держать шестьдесят кадров в секунду на телефоне: градиент рисуется на canvas слоями, а не картинкой, поэтому весит килобайты и не мылится на любом экране.</p>
+        </div>
+        <div class="nd-facts">
+          <div><em>Что делали</em><b>Дизайн и код</b></div>
+          <div><em>Вес графики</em><b>0 КБ</b></div>
+          <div><em>Кадров в секунду</em><b>60</b></div>
+        </div>
+      </div>
+      <div class="nd-live">
+        <div class="nd-live-bar"><i></i><i></i><i></i><span>Рисуется в реальном времени</span></div>
+        <div class="nd-live-body">
+          <canvas id="ndGrad" aria-label="Живой градиент, который перерисовывается в реальном времени"></canvas>
+          <div class="nd-grad-ctl" id="ndGradCtl">
+            <button class="nd-chip is-on" data-p="0">Instagram</button>
+            <button class="nd-chip" data-p="1">Threads</button>
+            <button class="nd-chip" data-p="2">Nodus</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ---------- 03 Боты ---------- -->
+  <article class="nd-work nd-rise">
+    <div class="nd-work-top">
+      <div>
+        <span class="nd-num">03 / Цифровой продукт</span>
+        <h3>Интерактивный подбор вместо формы</h3>
+        <div class="nd-work-txt" style="margin-top:22px">
+          <p>Обычная форма спрашивает всё сразу и пугает. Сценарий ведёт человека по одному вопросу за раз, подстраивая следующий шаг под предыдущий ответ, — и доводит до заявки тех, кто закрыл бы длинную анкету.</p>
+          <p>Справа не видео и не макет: нажмите кнопку и пройдите сценарий сами. Ровно так же он работает на боевом сайте.</p>
+        </div>
+        <div class="nd-facts">
+          <div><em>Что делаем</em><b>Сценарий под ключ</b></div>
+          <div><em>Срок запуска</em><b>от 5 дней</b></div>
+          <div><em>Поддержка</em><b>Есть</b></div>
+        </div>
+      </div>
+      <div class="nd-live">
+        <div class="nd-live-bar"><i></i><i></i><i></i><span>Пройдите сценарий сами</span></div>
+        <div class="nd-live-body">
+          <div class="nd-chat" id="ndChat"></div>
+          <div class="nd-btns" id="ndBtns"></div>
+        </div>
+      </div>
+    </div>
+  </article>
+</div></section>
+
+<!-- ================= СТУДИЯ ================= -->
+<section class="nd-sec" id="studio" style="background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)"><div class="nd-w">
+  <div class="nd-sec-h nd-rise">
+    <span class="nd-mono" style="color:var(--ind-2)">Студия</span>
+    <h2 class="nd-h2">Nodus — это узел, точка связи</h2>
+    <p class="nd-sub">В нашем знаке центральная точка соединена тремя лучами с тремя внешними: сайты, проекты, цифровые продукты. Мы собираем их в один работающий результат, а не отдаём кусками. Четвёртое направление, продвижение, держит всё это на связи с людьми.</p>
+  </div>
+  <div class="nd-serv">
+    <div class="nd-card nd-rise"><em>01</em><h4>Сайты</h4><p>От одностраничника до многостраничного сайта с каталогом. Пишем код руками там, где конструктора не хватает.</p></div>
+    <div class="nd-card nd-rise"><em>02</em><h4>Проекты</h4><p>Нестандартные задачи под ключ: интерактивные страницы, презентации, разовые вещи, которые не ложатся в шаблон.</p></div>
+    <div class="nd-card nd-rise"><em>03</em><h4>Цифровые продукты</h4><p>Сервисы с настоящей логикой внутри: расчёты, подбор, личные кабинеты. То, чем пользуются, а не просто читают.</p></div>
+    <div class="nd-card nd-rise"><em>04</em><h4>Продвижение</h4><p>SEO, аналитика, контент. Без этого даже отличный сайт остаётся визиткой, которую никто не видел.</p></div>
+  </div>
+</div></section>
+
+<!-- ================= КОНТАКТ ================= -->
+<section class="nd-cta" id="contact"><div class="nd-w nd-rise">
+  <span class="nd-mono" style="color:var(--ind-2)">Связаться</span>
+  <h2>Расскажите,<br>что нужно сделать</h2>
+  <p>Опишите задачу своими словами — даже если она пока звучит размыто. Ответим, посчитаем сроки и честно скажем, если делать это не стоит.</p>
+  <div class="nd-cta-row">
+    <a class="nd-big" href="https://t.me/nodus_digital_studio" target="_blank" rel="noopener">Написать в Telegram <span>→</span></a>
+    <a class="nd-bsup" id="ndSupport" href="#" target="_blank" rel="noopener" style="display:none">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 20.5S3.5 15.2 3.5 9.4A4.4 4.4 0 0 1 12 7.2a4.4 4.4 0 0 1 8.5 2.2c0 5.8-8.5 11.1-8.5 11.1Z"
+              stroke="#8B8FF5" stroke-width="1.9" stroke-linejoin="round"/>
+      </svg>
+      Поддержать студию
+    </a>
+  </div>
+  <span class="nd-sup-note" id="ndSupportNote" style="display:none">Мы делаем такие штуки, как эта страница, и выкладываем их бесплатно. Если пригодилось — можно закинуть на кофе.</span>
+  <span class="nd-alt">Наш канал: <a href="https://t.me/nodus_digital_studio" target="_blank" rel="noopener">@nodus_digital_studio</a></span>
+</div></section>
+
+<footer class="nd-foot"><div class="nd-w nd-foot-in">
+  <span>© 2026 Nodus — цифровая студия</span>
+  <span><a href="https://taxnow.ru" target="_blank" rel="noopener">taxnow.ru</a> · <a href="https://t.me/nodus_digital_studio" target="_blank" rel="noopener">Telegram</a></span>
+</div></footer>
+</div>
+
+<script>
+(function(){
+  var R=document.getElementById('nd'); if(!R) return;
+  var RM=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ============================================================
+     ССЫЛКА ДЛЯ КНОПКИ «ПОДДЕРЖАТЬ СТУДИЮ»
+     Впишите между кавычками адрес: Boosty, CloudTips, ЮMoney,
+     Telegram-донат — что удобнее. Пока строка пустая,
+     кнопка на сайте не показывается и битой ссылки не будет.
+     Пример: var SUPPORT_URL='https://boosty.to/nodus';
+     ============================================================ */
+  var SUPPORT_URL='';
+
+  (function(){
+    var b=document.getElementById('ndSupport'), n=document.getElementById('ndSupportNote');
+    if(!b) return;
+    if(SUPPORT_URL && SUPPORT_URL.indexOf('http')===0){
+      b.href=SUPPORT_URL; b.style.display=''; if(n) n.style.display='';
+    }
+  })();
+
+  /* ---------- шапка ---------- */
+  var head=document.getElementById('ndHead');
+  addEventListener('scroll',function(){head.classList.toggle('is-stuck',scrollY>40);},{passive:true});
+
+  /* ---------- появление блоков ---------- */
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){e.target.classList.add('is-in'); io.unobserve(e.target);} });
+    },{rootMargin:'0px 0px -12% 0px'});
+    R.querySelectorAll('.nd-rise').forEach(function(el){io.observe(el);});
+  } else { R.querySelectorAll('.nd-rise').forEach(function(el){el.classList.add('is-in');}); }
+
+  /* ---------- бегущая строка ---------- */
+  (function(){
+    var items=['Сайты','Проекты','Цифровые продукты','Продвижение','Лендинги',
+               'Интерактивная графика','SEO и аналитика','Поддержка и доработки'];
+    var row=items.map(function(x){return '<b>'+x+'<u></u></b>';}).join('');
+    document.getElementById('ndMarq').innerHTML=row+row;
+  })();
+
+  /* ---------- герой: живая сеть, собирающаяся в знак ---------- */
+  var hero=document.getElementById('ndHeroSec');
+  var hc=document.getElementById('ndHero'), hx=hc.getContext('2d');
+  var DPR=Math.min(devicePixelRatio||1,2), W=0,H=0;
+  var N=innerWidth<760?52:104, P=[], targets=[], mx=-9999,my=-9999;
+
+  function buildTargets(){
+    var cx=W*(innerWidth<900?0.5:0.68), cy=H*0.5, S=Math.min(W,H)*(innerWidth<900?0.3:0.34);
+    var pts=[], i, k;
+    var outer=[];
+    for(i=0;i<3;i++){
+      var a=-Math.PI/2+i*(Math.PI*2/3);
+      outer.push([cx+Math.cos(a)*S, cy+Math.sin(a)*S]);
+    }
+    // центральное ядро
+    for(k=0;k<14;k++){
+      var ang=Math.random()*7, rr=Math.sqrt(Math.random())*S*0.15;
+      pts.push([cx+Math.cos(ang)*rr, cy+Math.sin(ang)*rr]);
+    }
+    // лучи
+    outer.forEach(function(o){
+      for(k=1;k<=11;k++){
+        var t=k/12;
+        pts.push([cx+(o[0]-cx)*t, cy+(o[1]-cy)*t]);
+      }
+    });
+    // внешние узлы
+    outer.forEach(function(o){
+      for(k=0;k<9;k++){
+        var ang=Math.random()*7, rr=Math.sqrt(Math.random())*S*0.09;
+        pts.push([o[0]+Math.cos(ang)*rr, o[1]+Math.sin(ang)*rr]);
+      }
+    });
+    targets=[];
+    for(i=0;i<N;i++) targets.push(pts[i%pts.length]);
+  }
+
+  function fit(){
+    W=hc.clientWidth; H=hc.clientHeight;
+    hc.width=W*DPR; hc.height=H*DPR; hx.setTransform(DPR,0,0,DPR,0,0);
+    buildTargets();
+  }
+  function seed(){
+    P=[];
+    for(var i=0;i<N;i++) P.push({
+      x:Math.random()*W, y:Math.random()*H,
+      vx:(Math.random()-0.5)*0.34, vy:(Math.random()-0.5)*0.34,
+      r:1.1+Math.random()*1.9
+    });
+  }
+  fit(); seed();
+  addEventListener('resize',function(){fit();},{passive:true});
+
+  hero.addEventListener('pointermove',function(e){
+    var r=hc.getBoundingClientRect(); mx=e.clientX-r.left; my=e.clientY-r.top;
+  });
+  hero.addEventListener('pointerleave',function(){mx=-9999;my=-9999;});
+
+  var phase=0, clock=0, LINK=innerWidth<760?108:132;
+  function draw(){
+    if(!RM){
+      clock++;
+      // цикл: 7 c свободно -> 5 c собрано
+      var cyc=clock%720;
+      phase=cyc<420?0:1;
+    }
+    hx.clearRect(0,0,W,H);
+
+    for(var i=0;i<N;i++){
+      var p=P[i];
+      if(phase===1){
+        var t=targets[i];
+        p.x+=(t[0]-p.x)*0.045; p.y+=(t[1]-p.y)*0.045;
+        p.vx*=0.9; p.vy*=0.9;
+      } else {
+        p.x+=p.vx; p.y+=p.vy;
+        if(p.x<0||p.x>W) p.vx*=-1;
+        if(p.y<0||p.y>H) p.vy*=-1;
+      }
+      // курсор расталкивает
+      var dx=p.x-mx, dy=p.y-my, d2=dx*dx+dy*dy;
+      if(d2<28900 && d2>1){
+        var d=Math.sqrt(d2), f=(170-d)/170*2.4;
+        p.x+=dx/d*f; p.y+=dy/d*f;
+      }
+    }
+
+    // связи
+    for(var a=0;a<N;a++){
+      for(var b=a+1;b<N;b++){
+        var q=P[a], w=P[b], ddx=q.x-w.x, ddy=q.y-w.y, dd=Math.sqrt(ddx*ddx+ddy*ddy);
+        if(dd<LINK){
+          var al=(1-dd/LINK)*(phase===1?0.5:0.26);
+          hx.strokeStyle='rgba(91,95,239,'+al.toFixed(3)+')';
+          hx.lineWidth=phase===1?1.4:1;
+          hx.beginPath(); hx.moveTo(q.x,q.y); hx.lineTo(w.x,w.y); hx.stroke();
+        }
+      }
+    }
+    // точки
+    for(var j=0;j<N;j++){
+      var s=P[j];
+      hx.fillStyle=phase===1?'#B9BBFB':'rgba(185,187,251,.72)';
+      hx.beginPath(); hx.arc(s.x,s.y,s.r+(phase===1?0.7:0),0,7); hx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+  /* ---------- экран загрузки ---------- */
+  (function(){
+    var box=document.getElementById('ndLoad'),
+        bar=document.getElementById('ndLoadBar'),
+        num=document.getElementById('ndLoadNum');
+    if(!box){ hero.classList.add('is-lit'); return; }
+
+    var prev=document.body.style.overflow;
+    document.body.style.overflow='hidden';
+
+    var pct=0, ready=false, MIN=RM?300:1900, t0=performance.now();
+    function markReady(){ ready=true; }
+    if(document.readyState==='complete') markReady();
+    else addEventListener('load',markReady);
+    if(document.fonts&&document.fonts.ready) document.fonts.ready.then(markReady);
+    setTimeout(markReady,3400);   // страховка
+
+    function tick(){
+      var elapsed=performance.now()-t0;
+      var floor=Math.min(92,elapsed/MIN*92);
+      var target=ready&&elapsed>=MIN?100:floor;
+      pct+=(target-pct)*0.14;
+      if(target===100&&pct>99.4) pct=100;
+      bar.style.width=pct+'%';
+      num.textContent=Math.round(pct);
+      if(pct>=100){ finish(); return; }
+      requestAnimationFrame(tick);
+    }
+    function finish(){
+      box.classList.add('is-done');
+      document.body.style.overflow=prev;
+      hero.classList.add('is-lit');
+      setTimeout(function(){ if(box.parentNode) box.parentNode.removeChild(box); },900);
+    }
+    requestAnimationFrame(tick);
+  })();
+
+  R.querySelectorAll('.nd-word i').forEach(function(el,i){
+    el.style.transitionDelay=(0.08+i*0.075)+'s';
+  });
+
+  /* ---------- демо 1: НДС ---------- */
+  function f(n,d){d=d||0;if(!isFinite(n))n=0;
+    return new Intl.NumberFormat('ru-RU',{minimumFractionDigits:d,maximumFractionDigits:d}).format(n);}
+  function nds(){
+    var s=parseFloat(String(R.querySelector('#ndSum').value).replace(',','.'))||0;
+    var r=parseFloat(R.querySelector('#ndRate').value);
+    var tax=s*r/100;
+    R.querySelector('#ndNds').innerHTML=f(tax,0)+' <span style="font-size:.45em;color:var(--fg-3)">₽</span>';
+    var tot=s+tax||1;
+    R.querySelector('#ndTape').innerHTML=
+      '<i style="width:'+(s/tot*100)+'%;background:#5B5FEF"></i>'+
+      '<i style="width:'+(tax/tot*100)+'%;background:#B9BBFB"></i>';
+    R.querySelector('#ndLeg').innerHTML=
+      '<span><u style="background:#5B5FEF"></u>Без НДС '+f(s,0)+' ₽</span>'+
+      '<span><u style="background:#B9BBFB"></u>С НДС '+f(s+tax,0)+' ₽</span>';
+  }
+  R.querySelector('#ndSum').addEventListener('input',nds);
+  R.querySelector('#ndRate').addEventListener('change',nds); nds();
+
+  /* ---------- демо 2: живой градиент ---------- */
+  var gc=document.getElementById('ndGrad'), gx=gc.getContext('2d');
+  var PAL=[
+    [[253,29,29],[247,119,55],[220,39,167],[131,58,180]],   // Instagram
+    [[0,0,0],[60,60,70],[120,120,140],[200,200,215]],       // Threads
+    [[91,95,239],[139,143,245],[185,187,251],[30,32,90]]    // Nodus
+  ];
+  var pal=0, gw=0,gh=0;
+  function gfit(){gw=gc.clientWidth; gh=gc.clientHeight; gc.width=gw*DPR; gc.height=gh*DPR;
+    gx.setTransform(DPR,0,0,DPR,0,0);}
+  addEventListener('resize',gfit); gfit();
+  var gt=0;
+  function gdraw(){
+    gt+=RM?0:0.0035;
+    gx.globalCompositeOperation='source-over';
+    gx.fillStyle='#0A0C10'; gx.fillRect(0,0,gw,gh);
+    gx.globalCompositeOperation='lighter';
+    var C=PAL[pal];
+    for(var i=0;i<C.length;i++){
+      var a=gt*(1+i*0.32)+i*1.9;
+      var x=gw*(0.5+Math.cos(a)*0.33), y=gh*(0.5+Math.sin(a*1.27+i)*0.36);
+      var rad=Math.max(gw,gh)*0.52;
+      var g=gx.createRadialGradient(x,y,0,x,y,rad);
+      g.addColorStop(0,'rgba('+C[i][0]+','+C[i][1]+','+C[i][2]+',0.72)');
+      g.addColorStop(1,'rgba('+C[i][0]+','+C[i][1]+','+C[i][2]+',0)');
+      gx.fillStyle=g; gx.beginPath(); gx.arc(x,y,rad,0,7); gx.fill();
+    }
+    gx.globalCompositeOperation='source-over';
+    requestAnimationFrame(gdraw);
+  }
+  gdraw();
+  R.querySelector('#ndGradCtl').addEventListener('click',function(e){
+    var b=e.target.closest('button[data-p]'); if(!b) return;
+    pal=+b.getAttribute('data-p');
+    R.querySelectorAll('#ndGradCtl .nd-chip').forEach(function(x){x.classList.toggle('is-on',x===b);});
+  });
+
+  /* ---------- демо 3: сценарий ---------- */
+  var chat=document.getElementById('ndChat'), btns=document.getElementById('ndBtns');
+  var TREE={
+    start:{bot:['Привет! Это помощник студии Nodus 👋','Задам пару вопросов и подскажу, с чего начать. Что вас интересует?'],
+      opts:[['Что вы делаете','services'],['Сроки и цены','price'],['Хочу обсудить задачу','lead']]},
+    services:{bot:['Четыре направления: сайты, проекты, цифровые продукты и продвижение.','Чаще всего берём всё вместе — так дешевле и ничего не теряется на стыках.'],
+      opts:[['А сколько это стоит','price'],['Как устроен этот сценарий','example'],['В начало','start']]},
+    price:{bot:['Сайт — от 5 дней, отдельная страница или сценарий — от 3 дней.','Цену называем после разговора: она зависит от объёма, а не от прайса. Бывает, что задача решается настройкой за час — тогда так и скажем.'],
+      opts:[['Хочу обсудить','lead'],['В начало','start']]},
+    example:{bot:['Вы прямо сейчас внутри него 🙂','Дерево вопросов, кнопки, переходы — каждый следующий шаг зависит от предыдущего ответа. На боевом сайте в конце добавляется заявка и уведомление владельцу.'],
+      opts:[['Сроки и цены','price'],['Хочу такой же','lead']]},
+    lead:{bot:['Отлично. Напишите нам в Telegram — ответим и всё обсудим.'],
+      opts:[['Написать в Telegram','link'],['В начало','start']]}
+  };
+  function push(cls,text){
+    var d=document.createElement('div'); d.className='nd-msg '+cls; d.textContent=text;
+    chat.appendChild(d); chat.scrollTop=chat.scrollHeight; return d;
+  }
+  function typing(){
+    var d=document.createElement('div'); d.className='nd-msg bot nd-typing';
+    d.innerHTML='<i></i><i></i><i></i>'; chat.appendChild(d); chat.scrollTop=chat.scrollHeight; return d;
+  }
+  function go(key,userText){
+    if(userText) push('me',userText);
+    btns.innerHTML='';
+    var node=TREE[key], i=0;
+    (function next(){
+      if(i>=node.bot.length){
+        node.opts.forEach(function(o){
+          var b=document.createElement('button'); b.className='nd-chip'; b.textContent=o[0];
+          b.addEventListener('click',function(){
+            if(o[1]==='link'){ window.open('https://t.me/nodus_digital_studio','_blank','noopener'); return; }
+            go(o[1],o[0]);
+          });
+          btns.appendChild(b);
+        });
+        return;
+      }
+      var tp=typing();
+      setTimeout(function(){ tp.remove(); push('bot',node.bot[i]); i++; next(); }, RM?0:520+i*180);
+    })();
+  }
+  go('start');
+})();
+</script>
